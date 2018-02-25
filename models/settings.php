@@ -14,7 +14,7 @@ UserCake V2.0 designed by: Jonathan Cassels
 $db_host = "127.0.0.1"; //Host address (most likely localhost)
 $db_name = "robots"; //Name of Database
 $db_user = "root"; //Name of database user
-$db_pass = ""; //Password for database user
+$db_pass = "localhost"; //Password for database user
 $db_table_prefix = "uc_";
 
 $copyright_message = "Copyright Robots4All"; //Insert Your Copyright Message Here

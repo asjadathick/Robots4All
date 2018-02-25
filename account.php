@@ -45,7 +45,7 @@ if (!securePage($_SERVER['PHP_SELF'])){die();}
 
 	 <?php
 
-  $adisp_avat = "images/noava.jpg";
+  $adisp_avat = "images/noava.png";
   $get_info_id = $loggedInUser->user_id;
   $groupname = ucfirst($loggedInUser->title);
   $signupdate = date("D jS M Y G:i:s",$loggedInUser->signupTimeStamp());

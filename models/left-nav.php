@@ -21,6 +21,7 @@ if(isUserLoggedIn())
 
 	<ul class="list-group">
 		<li class="list-group-item"><a href="account.php"><i class="fa fa-fw fa-user"></i> User Account</a></li>
+        <li class="list-group-item"><a href="timesheets.php"><i class="fa fa-fw fa-user"></i> Timesheets</a></li>
 		<li class="list-group-item"><a href="user_settings.php"><i class="fa fa-fw fa-pencil-square-o"></i> User Settings</a></li>
 		<li class="list-group-item"><a href="logout.php"><i class="fa fa-fw fa-sign-out"></i> Log Out</a></li>
 	</ul>

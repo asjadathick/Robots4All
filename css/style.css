@@ -34,6 +34,10 @@ body { }
   
 }
 
+a.navbar-brand {
+  height: 130px;
+}
+
 .form-signup {
   max-width: 640px;
   padding: 15px;
