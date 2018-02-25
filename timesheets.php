@@ -156,42 +156,30 @@ if(!empty($_POST))
                 <h1>Add a timesheet</h1>
 
                 <div class="row ">
-                    <div class="col-sm-12 col-md-3">
+                    <div class="col-lg-12">
 
                         <?php
                         echo resultBlock($errors,$successes);
                         ?>
-                        <form name="updateAccount" action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
+                        <p>Enter your timesheet details and click on the save button</p>
+                        <table>
+                            <tr>
+                                <th>#</th>
+                                <th style="col-md-7">Date</th>
+                                <th style="col-md-7">Start Time</th>
+                                <th style="col-md-7">End Time</th>
+                                <th style="col-md-7">Task</th>
+                                <th style="col-md-7">Completed</th>
+                                <th style="col-md-7">Options</th>
+                            </tr>
+                            <?php
+                            $results = fetchTimesheetData($loggedInUser->email);
+                            foreach ($results as $result){
+                                echo "<tr><td>{$result['id']}</td><td>{$result['date']}</td><td>{$result['stime']}</td><td>{$result['etime']}</td><td>{$result['task']}</td><td>{$result['completed']}</td></tr>";
 
-
-                            <div class="form-group">
-                                <label for="password">Enter your current password:</label>
-                                <input class="form-control" type="password" name="password" id="password" />
-                            </div>
-
-                            <div class="form-group">
-                                <label for="email">Email:</label>
-                                <input class="form-control" type="text" name="email" id="email" value="<?php echo $loggedInUser->email;?>" />
-                            </div>
-
-                            <div class="form-group">
-                                <label for="passwordc">New Password:</label>
-                                <input class="form-control" type="password" name="passwordc" id="passwordc" />
-                                <p class="help-block">8 character minimum</p>
-
-                                <label for="passwordcheck">Confirm Password:</label>
-                                <input class="form-control" type="password" name="passwordcheck" id="passwordcheck" />
-                                <p class="help-block">8 character minimum</p>
-
-                            </div>
-
-                            <div class="form-group">
-                                <input class="btn btn-primary" type="submit" value="Update"  />
-                                <a href='account.php' class='btn btn-danger'>Cancel</a>
-                            </div>
-
-                            <input type="hidden" name="csrf" value="<?=Token::generate();?>" >
-                        </form>
+                            }
+                            ?>
+                        </table>
 
 
                     </div> <!-- /col -->

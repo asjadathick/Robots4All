@@ -315,6 +315,23 @@ function resultBlock($errors,$successes){
 						return ($row);
 					}
 
+					function fetchTimesheetData($username=NULL){
+                        global $mysqli,$db_table_prefix;
+                        $stmt = $mysqli->prepare("SELECT * from timesheets where username=?");
+                        $stmt->bind_param("s", $username);
+
+                        $stmt->execute();
+                        $stmt->bind_result($id, $user, $date, $stime, $etime, $task, $completed);
+                        $results = array();
+                        while ($stmt->fetch()){
+                            $row = array('id' => $id, 'user' => $user, 'date' => $date, 'stime' => $stime, 'etime' => $etime, 'task' => $task, 'completed' => $completed);
+                            $results[] = $row;
+
+                        }
+                        $stmt->close();
+                        return ($results);
+					}
+
 					//Retrieve complete user information by username, token or ID
 					function fetchUserDetails($username=NULL,$token=NULL, $id=NULL)
 					{

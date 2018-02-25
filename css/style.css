@@ -38,6 +38,18 @@ a.navbar-brand {
   height: 130px;
 }
 
+tbody {
+  width: 100%;
+}
+
+th, td{
+  padding: 10px;
+}
+
+.alt{
+  background-color: lightgrey;
+}
+
 .form-signup {
   max-width: 640px;
   padding: 15px;
