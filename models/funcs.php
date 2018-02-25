@@ -287,6 +287,22 @@ function resultBlock($errors,$successes){
 					}
 				}
 
+				function deleteTimeSheetEntry($id, $user){
+                    global $mysqli,$db_table_prefix;
+                    $stmt = $mysqli->prepare("DELETE FROM timesheets WHERE username=? AND id=?");
+                    $stmt->bind_param("sd", $user, $id);
+
+                    $stmt->execute();
+				}
+
+				function addTimeSheetEntry($user, $stime, $etime, $date, $task, $complete){
+                    global $mysqli,$db_table_prefix;
+                    $stmt = $mysqli->prepare("INSERT INTO timesheets VALUES (NULL, ?, ?, ?, ?, ?, ?)");
+                    $stmt->bind_param("ssssss", $user, $date, $stime, $etime, $task, $complete);
+
+                    $stmt->execute();
+				}
+
 				//Retrieve information for all users
 				function fetchAllUsers()
 				{
