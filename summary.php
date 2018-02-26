@@ -17,14 +17,14 @@ if(!empty($_POST))
 
     //delete handler
     if (isset($_POST['delete'])){
-        deleteTimeSheetEntry($_POST['delete'], $loggedInUser->email);
+        deleteTaskData($_POST['delete'], $loggedInUser->email);
         echo "<div class=\"alert alert-info\">
   <strong>Deleted!</strong> Timesheet entry removed from your account.
 </div>";
     }
 
     if (isset($_POST['add'])){
-        addTimeSheetEntry($loggedInUser->email, $_POST['astime'], $_POST['aetime'], $_POST['adate'], $_POST['atask'], $_POST['adescription'], $_POST['acompleted']);
+        addTaskData($loggedInUser->email, $_POST['atask']);
         echo "<div class=\"alert alert-success\">
   <strong>Success!</strong> Timesheet entry added on your account.
 </div>";
@@ -74,7 +74,7 @@ if(!empty($_POST))
             if ($loggedInUser->checkPermission(array(1))){
                 ?>
 
-                <h1>Add a timesheet</h1>
+                <h1>Summary</h1>
 
                 <div class="row ">
                     <div class="col-lg-12">
@@ -82,22 +82,17 @@ if(!empty($_POST))
                         <?php
                         echo resultBlock($errors,$successes);
                         ?>
-                        <p>Enter your timesheet details and click on the save button</p>
+                        <p>Create new tasks on your account</p>
                         <table>
                             <tr>
                                 <th>#</th>
-                                <th style="col-md-7">Date</th>
-                                <th style="col-md-7">Start Time</th>
-                                <th style="col-md-7">End Time</th>
                                 <th style="col-md-7">Task</th>
-                                <th style="col-md-7">Description</th>
-                                <th style="col-md-7">Completed</th>
                                 <th style="col-md-7">Options</th>
                             </tr>
                             <?php
-                            $results = fetchTimesheetData($loggedInUser->email);
+                            $results = fetchTaskData($loggedInUser->email);
                             foreach ($results as $result){
-                                echo "<tr><td>{$result['id']}</td><td>{$result['date']}</td><td>{$result['stime']}</td><td>{$result['etime']}</td><td>{$result['task']}</td><td>{$result['description']}</td><td>{$result['completed']}</td><td><form method='post'><input type='hidden' name='delete' value='" . $result['id'] ."'><input type='submit' value='Delete'></form></td></tr>";
+                                echo "<tr><td>{$result['id']}</td><td>{$result['task']}</td><td><form method='post'><input type='hidden' name='delete' value='" . $result['id'] ."'><input type='submit' value='Delete'></form></td></tr>";
 
                             }
                             ?>
@@ -108,19 +103,7 @@ if(!empty($_POST))
                                 <form method="post">
                                     <input type="hidden" name="add">
                                     <td>Auto assigned</td>
-                                    <td><input name="adate" type="date"></td>
-                                    <td><input name="astime" type="time"></td>
-                                    <td><input name="aetime" type="time"></td>
-                                    <td><select name="atask">
-                                            <?php
-                                                $tasks = fetchTaskData($loggedInUser->email);
-                                                foreach ($tasks as $task){
-                                                    echo "<option value='" . $task['id'] ."'>{$task['task']}</option>";
-                                                }
-                                            ?>
-                                    </td>
-                                    <td><input name="adescription" type="text"></td>
-                                    <td><select name="acompleted"><option value="Yes">Yes</option><option value="No">No</option></select></td>
+                                    <td><input name="atask" type="text"></td>
                                     <td><input type="submit" value="Add Entry"></td>
                                 </form>
                             </tr>

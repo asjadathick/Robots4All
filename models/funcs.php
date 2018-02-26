@@ -295,12 +295,28 @@ function resultBlock($errors,$successes){
                     $stmt->execute();
 				}
 
-				function addTimeSheetEntry($user, $stime, $etime, $date, $task, $complete){
+				function deleteTaskData($id, $user){
+					global $mysqli,$db_table_prefix;
+					$stmt = $mysqli->prepare("DELETE FROM tasks WHERE username=? AND id=?");
+					$stmt->bind_param("sd", $user, $id);
+
+					$stmt->execute();
+				}
+
+				function addTimeSheetEntry($user, $stime, $etime, $date, $task, $description, $complete){
                     global $mysqli,$db_table_prefix;
-                    $stmt = $mysqli->prepare("INSERT INTO timesheets VALUES (NULL, ?, ?, ?, ?, ?, ?)");
-                    $stmt->bind_param("ssssss", $user, $date, $stime, $etime, $task, $complete);
+                    $stmt = $mysqli->prepare("INSERT INTO timesheets VALUES (NULL, ?, ?, ?, ?, ?, ?, ?)");
+                    $stmt->bind_param("sssssss", $user, $date, $stime, $etime, $task, $description, $complete);
 
                     $stmt->execute();
+				}
+
+				function addTaskData($user, $task){
+					global $mysqli,$db_table_prefix;
+					$stmt = $mysqli->prepare("INSERT INTO tasks VALUES (NULL, ?, ?)");
+					$stmt->bind_param("ss", $task, $user);
+
+					$stmt->execute();
 				}
 
 				//Retrieve information for all users
@@ -333,19 +349,36 @@ function resultBlock($errors,$successes){
 
 					function fetchTimesheetData($username=NULL){
                         global $mysqli,$db_table_prefix;
-                        $stmt = $mysqli->prepare("SELECT * from timesheets where username=?");
+                        $stmt = $mysqli->prepare("SELECT A.id, A.username, A.date, A.starttime, A.endtime, concat(B.id, ' - ', B.task), A.description, A.completed from timesheets A join tasks B on A.task = B.id where A.username=?");
                         $stmt->bind_param("s", $username);
 
                         $stmt->execute();
-                        $stmt->bind_result($id, $user, $date, $stime, $etime, $task, $completed);
+                        $stmt->bind_result($id, $user, $date, $stime, $etime, $task, $desc, $completed);
                         $results = array();
                         while ($stmt->fetch()){
-                            $row = array('id' => $id, 'user' => $user, 'date' => $date, 'stime' => $stime, 'etime' => $etime, 'task' => $task, 'completed' => $completed);
+                            $row = array('id' => $id, 'user' => $user, 'date' => $date, 'stime' => $stime, 'etime' => $etime, 'task' => $task, 'description' => $desc ,'completed' => $completed);
                             $results[] = $row;
 
                         }
                         $stmt->close();
                         return ($results);
+					}
+
+					function fetchTaskData($username=NULL){
+						global $mysqli,$db_table_prefix;
+						$stmt = $mysqli->prepare("SELECT * from tasks where username=?");
+						$stmt->bind_param("s", $username);
+
+						$stmt->execute();
+						$stmt->bind_result($id, $task, $user);
+						$results = array();
+						while ($stmt->fetch()){
+							$row = array('id' => $id, 'task' => $task);
+							$results[] = $row;
+
+						}
+						$stmt->close();
+						return ($results);
 					}
 
 					//Retrieve complete user information by username, token or ID
