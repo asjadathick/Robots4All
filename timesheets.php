@@ -107,7 +107,7 @@ if(!empty($_POST))
                             <tr>
                                 <form method="post">
                                     <input type="hidden" name="add">
-                                    <td>Auto assigned</td>
+                                    <td>Timesheet Entry:</td>
                                     <td><input name="adate" type="date"></td>
                                     <td><input name="astime" type="time"></td>
                                     <td><input name="aetime" type="time"></td>

@@ -33,6 +33,7 @@ if(!empty($_POST))
 ?>
 
 <div class="container-fluid" style="">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.bundle.min.js"></script>
 
 
 
@@ -82,35 +83,67 @@ if(!empty($_POST))
                         <?php
                         echo resultBlock($errors,$successes);
                         ?>
-                        <p>Create new tasks on your account</p>
+                        <p>Showing the number of hours spent on tasks:</p>
                         <table>
                             <tr>
-                                <th>#</th>
-                                <th style="col-md-7">Task</th>
-                                <th style="col-md-7">Options</th>
+                                <th>Task Name</th>
+                                <th style="col-md-7">Task start date</th>
+                                <th style="col-md-7">Timesheet Entries</th>
+                                <th style="col-md-7">Hours</th>
+
                             </tr>
                             <?php
-                            $results = fetchTaskData($loggedInUser->email);
+                            $results = fetchSummaryData($loggedInUser->email);
                             foreach ($results as $result){
-                                echo "<tr><td>{$result['id']}</td><td>{$result['task']}</td><td><form method='post'><input type='hidden' name='delete' value='" . $result['id'] ."'><input type='submit' value='Delete'></form></td></tr>";
+                                echo "<tr><td>{$result['task']}</td><td>{$result['startdate']}</td><td>{$result['count']}</td><td>{$result['hours']}</td></tr>";
 
                             }
                             ?>
-                            <tr>
-                                <td colspan="7">Fill in a new timesheet entry</td>
-                            </tr>
-                            <tr>
-                                <form method="post">
-                                    <input type="hidden" name="add">
-                                    <td>Auto assigned</td>
-                                    <td><input name="atask" type="text"></td>
-                                    <td><input type="submit" value="Add Entry"></td>
-                                </form>
-                            </tr>
                         </table>
+
+                        <p>Proportion of time spent</p>
+
+                        <canvas id="myChart" width="400" height="400"></canvas>
+
 
 
                     </div> <!-- /col -->
+                    <script>
+                        var ctx = document.getElementById("myChart");
+                        var myChart = new Chart(ctx, {
+                            responsive: false,
+                            width:400,
+                            height:400,
+                            scaleShowGridLines: false,
+                            showScale: false,
+                            maintainAspectRatio: this.maintainAspectRatio,
+                            type: 'pie',
+                            data: {
+                                labels: [<?php
+
+                                    $results = getPieData($loggedInUser->email);
+                                    $len = count($results);
+                                    foreach ($results as $index => $result){
+                                        echo "'" . $result['task'] . "'" . ($index == $len - 1 ? "" : ",");
+                                    }
+
+                                    ?>],
+                                datasets: [{
+                                    data: [<?php
+
+                                        $results = getPieData($loggedInUser->email);
+                                        $len = count($results);
+                                        foreach ($results as $index => $result){
+                                            echo "'" . $result['hours'] . "'" . ($index == $len - 1 ? "" : ",");
+                                        }
+
+                                        ?>],
+                                    borderWidth: 1
+                                }]
+                            }
+
+                        });
+                    </script>
 
                 </div> <!-- /row -->
             <?php } ?>

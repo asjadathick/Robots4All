@@ -347,9 +347,49 @@ function resultBlock($errors,$successes){
 						return ($row);
 					}
 
+					function fetchSummaryData($username=NULL){
+					$query="SELECT B.task, min(DATE_FORMAT(A.date,'%d-%m-%Y')), count(*), 
+round(sum(time_to_sec(timediff(TIME_FORMAT(STR_TO_DATE(A.endtime, '%H:%i'), '%H:%i'),  TIME_FORMAT(STR_TO_DATE(A.starttime, '%H:%i'), '%H:%i'))))/3600, 0) from timesheets A
+join tasks B on A.task = B.id where A.username=? GROUP BY B.task";
+                        global $mysqli,$db_table_prefix;
+                        $stmt = $mysqli->prepare($query);
+                        $stmt->bind_param("s", $username);
+
+                        $stmt->execute();
+                        $stmt->bind_result($task, $startdate, $count, $hours);
+                        $results = array();
+                        while ($stmt->fetch()){
+                            $row = array('task' => $task, 'startdate' => $startdate, 'count' => $count, 'hours' => $hours);
+                            $results[] = $row;
+
+                        }
+                        $stmt->close();
+                        return ($results);
+					}
+
+					function getPieData($username=NULL){
+                        $query="SELECT B.task,
+round(sum(time_to_sec(timediff(TIME_FORMAT(STR_TO_DATE(A.endtime, '%H:%i'), '%H:%i'),  TIME_FORMAT(STR_TO_DATE(A.starttime, '%H:%i'), '%H:%i'))))/3600, 0) from timesheets A
+join tasks B on A.task = B.id where A.username=? GROUP BY B.task";
+                        global $mysqli,$db_table_prefix;
+                        $stmt = $mysqli->prepare($query);
+                        $stmt->bind_param("s", $username);
+
+                        $stmt->execute();
+                        $stmt->bind_result($task, $hours);
+                        $results = array();
+                        while ($stmt->fetch()){
+                            $row = array('task' => $task, 'hours' => $hours);
+                            $results[] = $row;
+
+                        }
+                        $stmt->close();
+                        return ($results);
+					}
+
 					function fetchTimesheetData($username=NULL){
                         global $mysqli,$db_table_prefix;
-                        $stmt = $mysqli->prepare("SELECT A.id, A.username, A.date, A.starttime, A.endtime, concat(B.id, ' - ', B.task), A.description, A.completed from timesheets A join tasks B on A.task = B.id where A.username=?");
+                        $stmt = $mysqli->prepare("SELECT A.id, A.username, A.date, A.starttime, A.endtime, concat(B.id, ' - ', B.task), A.description, A.completed from timesheets A join tasks B on A.task = B.id where A.username=? ORDER BY A.date ASC");
                         $stmt->bind_param("s", $username);
 
                         $stmt->execute();

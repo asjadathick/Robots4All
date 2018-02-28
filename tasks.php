@@ -97,12 +97,12 @@ if(!empty($_POST))
                             }
                             ?>
                             <tr>
-                                <td colspan="7">Fill in a new timesheet entry</td>
+                                <td colspan="7">Create a new task:</td>
                             </tr>
                             <tr>
                                 <form method="post">
                                     <input type="hidden" name="add">
-                                    <td>Auto assigned</td>
+                                    <td>Task name:</td>
                                     <td><input name="atask" type="text"></td>
                                     <td><input type="submit" value="Add Entry"></td>
                                 </form>
