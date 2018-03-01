@@ -103,46 +103,39 @@ if(!empty($_POST))
 
                         <p>Proportion of time spent</p>
 
-                        <canvas id="myChart" width="400" height="400"></canvas>
+                        <div id="piechart" style="width: 900px; height: 500px;"></div>
 
 
 
                     </div> <!-- /col -->
-                    <script>
-                        var ctx = document.getElementById("myChart");
-                        var myChart = new Chart(ctx, {
-                            responsive: false,
-                            width:400,
-                            height:400,
-                            scaleShowGridLines: false,
-                            showScale: false,
-                            maintainAspectRatio: this.maintainAspectRatio,
-                            type: 'pie',
-                            data: {
-                                labels: [<?php
+                    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+                    <script type="text/javascript">
+                        google.charts.load('current', {'packages':['corechart']});
+                        google.charts.setOnLoadCallback(drawChart);
 
-                                    $results = getPieData($loggedInUser->email);
-                                    $len = count($results);
-                                    foreach ($results as $index => $result){
-                                        echo "'" . $result['task'] . "'" . ($index == $len - 1 ? "" : ",");
-                                    }
+                        function drawChart() {
 
-                                    ?>],
-                                datasets: [{
-                                    data: [<?php
+                            var data = google.visualization.arrayToDataTable([
+                                ['Task', 'Hours'],
+                                <?php
 
-                                        $results = getPieData($loggedInUser->email);
-                                        $len = count($results);
-                                        foreach ($results as $index => $result){
-                                            echo "'" . $result['hours'] . "'" . ($index == $len - 1 ? "" : ",");
-                                        }
+                                $results = getPieData($loggedInUser->email);
+                                $len = count($results);
+                                foreach ($results as $index => $result){
+                                    echo "['" . $result['task'] . "'," . $result['hours'] . "]" . ($index == $len - 1 ? "" : ",");
+                                }
 
-                                        ?>],
-                                    borderWidth: 1
-                                }]
-                            }
+                                ?>
+                            ]);
 
-                        });
+                            var options = {
+                                title: 'My Volunteer Hours'
+                            };
+
+                            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+                            chart.draw(data, options);
+                        }
                     </script>
 
                 </div> <!-- /row -->
