@@ -94,14 +94,17 @@ if(!empty($_POST))
                             </tr>
                             <?php
                             $results = fetchSummaryData($loggedInUser->email);
+                            $total = 0;
                             foreach ($results as $result){
                                 echo "<tr><td>{$result['task']}</td><td>{$result['startdate']}</td><td>{$result['count']}</td><td>{$result['hours']}</td></tr>";
-
+                                $total += $result['hours'];
                             }
+
+                            echo "<tr><th colspan='3'>Total hours spent</th><td>{$total}</td></tr>";
                             ?>
                         </table>
 
-                        <p>Proportion of time spent</p>
+                        <br><h2>Proportion of time spent</h2>
 
                         <div id="piechart" style="width: 900px; height: 500px;"></div>
 
